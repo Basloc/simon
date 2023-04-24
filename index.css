@@ -1,0 +1,19 @@
+#start { 
+    margin-left: 50%;
+    margin-top: 20%;
+}
+
+#contain {
+    display: flex;
+    margin-left: 40%;
+    margin-top: 30%;
+
+}
+
+#score {
+    display: none;
+}
+
+#time {
+    display:none;
+}

@@ -1,9 +1,13 @@
-let colors = ["rouge","vert","bleu","jaune","violet","orange"]
+let colors = ["red","green","blue","yellow","purple","orange"]
 let click = 0
 let sc = 0
+let tm = 0
+let currentScore = 0
+let ladder = [0,0,0,0,0]
 
 let series = []
 let current = []
+
 
 
 
@@ -13,14 +17,16 @@ function getRandomInt(max) {
 
 function start() {
     let score = document.getElementById("score")
+    let lad = document.getElementById('ladder')
     score.textContent = `Score : ${sc}`
     let contain = document.getElementById('contain')
     let button = document.getElementById('start')
     let time = document.getElementById("time")
-    
+    time.textContent = `Time : ${tm}`
     time.style.display = "block"
     score.style.display = 'block'
     button.style.display = 'none'
+    lad.textContent = `ladder : ${ladder}`
     for (let color = 0; color < colors.length; color++) {
         let btn = document.createElement("button")
         btn.setAttribute("id",colors[color])
@@ -28,15 +34,18 @@ function start() {
         btn.textContent = colors[color]
         contain.append(btn)
     }
-    
+    setInterval(() => {
+        let time = document.getElementById("time")
+        time.textContent = `Time : ${tm}`
+        tm++
+    }, 1000);
 
-    let cur = document.getElementById('cur')
-    // -----------------------------------------------------------------------
-    let r = document.getElementById('rouge')
-    let v = document.getElementById('vert')
-    let b = document.getElementById('bleu')
-    let j = document.getElementById('jaune')
-    let vio = document.getElementById('violet')
+
+    let r = document.getElementById('red')
+    let v = document.getElementById('green')
+    let b = document.getElementById('blue')
+    let j = document.getElementById('yellow')
+    let vio = document.getElementById('purple')
     let o = document.getElementById('orange')
 
     r.addEventListener("click",() => app(r))
@@ -45,9 +54,7 @@ function start() {
     j.addEventListener("click",() => app(j))
     vio.addEventListener("click",() => app(vio))
     o.addEventListener("click",() => app(o))
-    // ----------------------------------------------------------------------
-    cur.addEventListener("click", () => console.log(current))
-    // ----------------------------------------------------------------------
+
     addColor()
         
 }
@@ -55,7 +62,7 @@ function start() {
 function app(ncol) {
     
     current.push(ncol.textContent)
-    if ( series.length == current.length) {
+    if ( series.length == current.length && verif(current,series)) {
         console.log("Win");
         addColor()
     }else {
@@ -72,6 +79,7 @@ function addColor() {
     let score = document.getElementById("score")
     score.textContent = `Score : ${sc}`
     sc++
+    currentScore = sc
     series.push(colors[getRandomInt(colors.length)])
     setTimeout(() => {  shine(series) }, 500);
     current = []
@@ -79,61 +87,28 @@ function addColor() {
 
 function shine(series) {
   
-        let r = document.getElementById('rouge')
-        let v = document.getElementById('vert')
-        let b = document.getElementById('bleu')
-        let j = document.getElementById('jaune')
-        let vio = document.getElementById('violet')
-        let o = document.getElementById('orange')
-        for (let index = 0; index < series.length; index++) {
-            if (series[index] == r.textContent) {
-                r.style.backgroundColor = 'red'
-                setTimeout(() => {  r.style.backgroundColor = ''; }, 1000);
+    let r = document.getElementById('red')
+    let v = document.getElementById('green')
+    let b = document.getElementById('blue')
+    let j = document.getElementById('yellow')
+    let vio = document.getElementById('purple')
+    let o = document.getElementById('orange')
+    
+    let toShine = [r,v,b,j,vio,o]
+
+    for (let index = 0; index < series.length; index++) {
+       
+        for ( let id = 0; id < toShine.length; id++) {
+                if (series[index] == toShine[id].textContent) {
+                    
+                    toShine[id].style.backgroundColor = toShine[id].textContent
+                    setTimeout(() => {  toShine[id].style.backgroundColor = ''; }, 1000);
+                }
+                
             }
-
-        }
-
-        for (let index = 0; index < series.length; index++) {
-            if (series[index] == v.textContent) {
-                v.style.backgroundColor = 'green'
-                setTimeout(() => {  v.style.backgroundColor = ''; }, 1000);
-            }
-
-        }
-
-        for (let index = 0; index < series.length; index++) {
-            if (series[index] == b.textContent) {
-                b.style.backgroundColor = 'blue'
-                setTimeout(() => {  b.style.backgroundColor = ''; }, 1000);
-            }
-        }
-
-        for (let index = 0; index < series.length; index++) {
-            if (series[index] == j.textContent) {
-                j.style.backgroundColor = 'yellow'
-                setTimeout(() => {  j.style.backgroundColor = ''; }, 1000);
-            }
-
-        }
-
-        for (let index = 0; index < series.length; index++) {
-            if (series[index] == vio.textContent) {
-                vio.style.backgroundColor = 'purple'
-                setTimeout(() => {  vio.style.backgroundColor = ''; }, 1000);
-            }
-
-        }
-
-        for (let index = 0; index < series.length; index++) {
-            if (series[index] == o.textContent) {
-                o.style.backgroundColor = 'orange'
-                setTimeout(() => {  o.style.backgroundColor = ''; }, 1000);
-            }
-        }
-
-
+    }
 }
-
+        
 
 
         
@@ -142,32 +117,16 @@ function verif(current,series) {
         for ( let id2 = 0 ; id2 < current.length;id2++) {
             if ( series[id2] == current[id2] ) {
                 continue
+            }else {
+                lose()
+                return false
             }
-        }
-        // if ( series[click] == ncol.textContent) {
-        //     click++
-        //     console.log("win");
-        //     current.push(ncol.textContent)
-        // }else {
-        //     console.log("lose");
-        //     click = 0
-        //     current = []
-        //     console.log(series);
-        //     series = []
-        //     score.textContent = "Score :"
-        // }
-        
+        }   
     }
+    return true
 }
 
 
-    
-
-
-
-
-
-
-
-
-
+function lose() {
+    location.reload()
+}
